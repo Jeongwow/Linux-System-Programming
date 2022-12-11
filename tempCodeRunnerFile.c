@@ -1,3 +1,2 @@
-    // for(int i=0; i<n; i++){
-        
-    // }
+    scanf("%s", str[0]);
+    scanf("%s", str[1]);
