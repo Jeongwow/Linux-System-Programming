@@ -1,33 +1,37 @@
-#define _CRT_SECURE_NO_WARNINGS
+#include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-void swap(char* str1, char* str2)
+struct thread_data
 {
-    char* temp;
-    temp = str1;
-    str1 = str2;
-    str2 = temp;
+    long long start;
+    long long end;
+    long long sum;
+};
+
+void *worker(void *arg){
+    struct thread_data *data=(struct thread_data*)arg;
+    for (size_t i = data->start; i <= data->end; i++)
+    {
+        data->sum+=i;
+    }
+    return data;
 }
 
-int main() 
-{
-    char str[2][100];
-    // // 입력
-    // scanf("%s", str[0]);
-    // scanf("%s", str[1]);
-
-    str[0][0]='a';
-    str[0][1]='b';
-    str[0][2]='c';
-
-    str[1][0]='w';
-    str[1][1]='b';
-    str[1][2]='v';
-    
+int main(){
+    struct thread_data t_data;
+    pthread_t mythread;
+    int result;
+    t_data.start=0;
+    t_data.end=100;
+    t_data.sum=0;
 
 
-    swap(str[0], str[1]);
-    //출력
-    printf("%s\n%s\n", str[0], str[1]);
+    result=pthread_create(&mythread,NULL,worker,(void *)&t_data);
+
+    pthread_join(mythread,NULL);
+    printf("sum : %11lld\n",t_data.sum);
+    pthread_exit(NULL);
     return 0;
 }
